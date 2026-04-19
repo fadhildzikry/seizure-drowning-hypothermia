@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ER Quick Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0f14;
+  --surface: #141720;
+  --surface2: #1a1f2e;
+  --surface3: #212638;
+  --border: #252d40;
+  --border2: #2d3750;
+  --text: #e8edf5;
+  --text2: #8d9bb5;
+  --text3: #4f5e7a;
+  --sz: #f4a535;
+  --sz-dim: rgba(244,165,53,0.1);
+  --dr: #34d0f0;
+  --dr-dim: rgba(52,208,240,0.1);
+  --hy: #b088ff;
+  --hy-dim: rgba(176,136,255,0.1);
+  --red: #ff6b6b;
+  --red-dim: rgba(255,107,107,0.1);
+  --green: #3dd68c;
+  --green-dim: rgba(61,214,140,0.1);
+  --orange: #ff9548;
+  --orange-dim: rgba(255,149,72,0.1);
+  --tab-h: 64px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom) + 10px);
+}
+/* TOP HEADER */
+.top-header {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 13px 16px 11px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.top-title { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text3); font-family: 'IBM Plex Mono', monospace; }
+.top-badge { font-size: 10px; font-family: 'IBM Plex Mono', monospace; background: var(--surface2); color: var(--text3); border: 1px solid var(--border); padding: 3px 8px; border-radius: 20px; }
+
+/* SUBNAV */
+.subnav { display: flex; gap: 6px; padding: 9px 14px; overflow-x: auto; scrollbar-width: none; background: var(--bg); position: sticky; top: 48px; z-index: 40; border-bottom: 1px solid var(--border); }
+.subnav::-webkit-scrollbar { display: none; }
+.subnav-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text3); font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 20px; cursor: pointer; white-space: nowrap; transition: all 0.18s; flex-shrink: 0; }
+.subnav-btn.active-sz { background: var(--sz-dim); border-color: var(--sz); color: var(--sz); }
+.subnav-btn.active-dr { background: var(--dr-dim); border-color: var(--dr); color: var(--dr); }
+.subnav-btn.active-hy { background: var(--hy-dim); border-color: var(--hy); color: var(--hy); }
+
+/* CONTENT */
+.content { padding: 14px 14px 20px; max-width: 640px; margin: 0 auto; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: rise 0.22s ease; }
+@keyframes rise { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+/* GROUP LABEL */
+.group-label { display: flex; align-items: center; gap: 8px; margin: 20px 0 10px; }
+.group-label:first-child { margin-top: 4px; }
+.group-tag { font-size: 10px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; }
+.tag-sz { background: var(--sz-dim); color: var(--sz); border: 1px solid rgba(244,165,53,0.25); }
+.tag-dr { background: var(--dr-dim); color: var(--dr); border: 1px solid rgba(52,208,240,0.25); }
+.tag-hy { background: var(--hy-dim); color: var(--hy); border: 1px solid rgba(176,136,255,0.25); }
+.tag-red { background: var(--red-dim); color: var(--red); border: 1px solid rgba(255,107,107,0.25); }
+.group-line { flex:1; height:1px; background: var(--border); }
+
+/* CARD */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px; overflow: hidden; transition: border-color 0.18s; }
+.card.open { border-color: var(--border2); }
+.card-hd { display: flex; align-items: center; gap: 10px; padding: 14px 15px; cursor: pointer; user-select: none; -webkit-user-select: none; min-height: 52px; }
+.card-hd:active { background: var(--surface2); }
+.card-icon { font-size: 18px; flex-shrink: 0; width: 26px; text-align: center; }
+.card-title { flex: 1; font-size: 14px; font-weight: 600; line-height: 1.35; letter-spacing: -0.01em; }
+.card-arrow { color: var(--text3); font-size: 11px; transition: transform 0.2s; flex-shrink: 0; font-family: 'IBM Plex Mono', monospace; }
+.card.open .card-arrow { transform: rotate(90deg); }
+.card-bd { display: none; border-top: 1px solid var(--border); padding: 14px 15px 16px; }
+.card.open .card-bd { display: block; }
+
+/* ROW LIST */
+.row-list { margin-top: 4px; }
+.row-item { padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; }
+.row-item:last-child { border-bottom: none; padding-bottom: 0; }
+.row-label { font-size: 12px; font-weight: 600; color: var(--text2); font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.03em; }
+.row-val { font-size: 13.5px; line-height: 1.55; color: var(--text); }
+
+/* CHECK LIST */
+.check-list { margin-top: 4px; }
+.check-item { display: flex; gap: 10px; align-items: flex-start; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; line-height: 1.55; }
+.check-item:last-child { border-bottom: none; }
+.check-ico { font-size: 14px; flex-shrink: 0; margin-top: 2px; width: 18px; text-align: center; }
+
+/* BADGE */
+.b { display: inline-block; font-size: 10px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; padding: 2px 7px; border-radius: 20px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
+.b-red { background: var(--red-dim); color: var(--red); border: 1px solid rgba(255,107,107,0.2); }
+.b-green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(61,214,140,0.2); }
+.b-yellow { background: var(--sz-dim); color: var(--sz); border: 1px solid rgba(244,165,53,0.2); }
+.b-blue { background: var(--dr-dim); color: var(--dr); border: 1px solid rgba(52,208,240,0.2); }
+.b-purple { background: var(--hy-dim); color: var(--hy); border: 1px solid rgba(176,136,255,0.2); }
+.b-orange { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(255,149,72,0.2); }
+
+/* ALERT */
+.alert { border-radius: 10px; padding: 12px 13px; margin-top: 12px; font-size: 13.5px; line-height: 1.6; display: flex; gap: 10px; }
+.alert-ico { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+.alert.red { background: var(--red-dim); border: 1px solid rgba(255,107,107,0.2); }
+.alert.yellow { background: var(--sz-dim); border: 1px solid rgba(244,165,53,0.2); }
+.alert.blue { background: var(--dr-dim); border: 1px solid rgba(52,208,240,0.2); }
+.alert.purple { background: var(--hy-dim); border: 1px solid rgba(176,136,255,0.2); }
+
+/* STEPS */
+.steps { margin-top: 6px; }
+.step { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
+.step-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; font-family: 'IBM Plex Mono', monospace; flex-shrink: 0; margin-top: 1px; }
+.sn-sz { background: var(--sz-dim); color: var(--sz); border: 1px solid rgba(244,165,53,0.3); }
+.sn-dr { background: var(--dr-dim); color: var(--dr); border: 1px solid rgba(52,208,240,0.3); }
+.sn-abc { background: var(--surface3); color: var(--text2); border: 1px solid var(--border2); font-size: 13px; }
+.step-body { flex:1; }
+.step-head { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.step-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+/* DRUG */
+.drug { background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px; padding: 11px 13px; margin-top: 8px; }
+.drug-name { font-size: 13.5px; font-weight: 700; margin-bottom: 5px; display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.drug-info { font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: var(--text2); line-height: 1.75; }
+
+/* ALGO */
+.algo { background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px; padding: 13px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 2; margin-top: 10px; overflow-x: auto; white-space: pre; }
+.a-step { color: var(--dr); font-weight: 600; }
+.a-drug { color: var(--sz); font-weight: 600; }
+.a-dim { color: var(--text3); }
+
+/* MNEMONIC */
+.mnem { margin-top: 8px; }
+.mnem-row { display: grid; grid-template-columns: 28px 1fr; gap: 0 10px; align-items: start; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.mnem-row:last-child { border-bottom: none; }
+.mnem-letter { font-size: 20px; font-weight: 800; line-height: 1.3; }
+.mnem-text { font-size: 13.5px; line-height: 1.55; padding-top: 2px; }
+.mnem-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+/* GRADE LIST */
+.grade-list { margin-top: 8px; display: flex; flex-direction: column; gap: 7px; }
+.grade-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 11px 13px; display: grid; grid-template-columns: 44px 76px 1fr; gap: 0 10px; align-items: center; }
+.grade-tag { font-size: 12px; font-family: 'IBM Plex Mono', monospace; font-weight: 700; }
+.grade-temp { font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: var(--text2); }
+.grade-desc { font-size: 13px; line-height: 1.4; }
+
+/* STAT GRID */
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.stat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 13px; }
+.stat-label { font-size: 10px; font-family: 'IBM Plex Mono', monospace; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+.stat-val { font-size: 24px; font-weight: 700; line-height: 1; }
+.stat-sub { font-size: 11px; color: var(--text2); margin-top: 5px; line-height: 1.4; }
+
+/* BOTTOM TAB */
+.bottom-tabs { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr 1fr; height: var(--tab-h); padding-bottom: env(safe-area-inset-bottom); z-index: 100; }
+.bot-tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; border: none; background: none; color: var(--text3); padding: 0; transition: all 0.18s; position: relative; }
+.bot-tab:active { opacity: 0.7; }
+.bot-tab .t-emoji { font-size: 20px; }
+.bot-tab .t-label { font-size: 10.5px; font-weight: 600; font-family: 'DM Sans', sans-serif; }
+.bot-tab.act-sz { color: var(--sz); }
+.bot-tab.act-dr { color: var(--dr); }
+.bot-tab.act-hy { color: var(--hy); }
+.bot-tab::before { content:''; position:absolute; top:0; left:20%; right:20%; height:2px; border-radius:0 0 2px 2px; background:transparent; transition:background 0.18s; }
+.bot-tab.act-sz::before { background: var(--sz); }
+.bot-tab.act-dr::before { background: var(--dr); }
+.bot-tab.act-hy::before { background: var(--hy); }
+
+.mt12 { margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<div class="top-header">
+  <span class="top-title">ER Quick Ref</span>
+  <span class="top-badge">v1.1 · ID</span>
+</div>
+
+<!-- SUBNAVS -->
+<div class="subnav" id="subnav-sz">
+  <button class="subnav-btn active-sz" onclick="scrollTo_('sz-first-aid',this,'sz')">First Aid</button>
+  <button class="subnav-btn" onclick="scrollTo_('sz-stabilize',this,'sz')">Stabilization</button>
+  <button class="subnav-btn" onclick="scrollTo_('sz-drugs',this,'sz')">Drug Ladder</button>
+  <button class="subnav-btn" onclick="scrollTo_('sz-workup',this,'sz')">Workup</button>
+  <button class="subnav-btn" onclick="scrollTo_('sz-dispo',this,'sz')">Disposition</button>
+</div>
+<div class="subnav" id="subnav-dr" style="display:none">
+  <button class="subnav-btn active-dr" onclick="scrollTo_('dr-first-aid',this,'dr')">First Aid</button>
+  <button class="subnav-btn" onclick="scrollTo_('dr-abcde',this,'dr')">ABCDE</button>
+  <button class="subnav-btn" onclick="scrollTo_('dr-pulm',this,'dr')">Pulmonary</button>
+  <button class="subnav-btn" onclick="scrollTo_('dr-workup',this,'dr')">Workup</button>
+  <button class="subnav-btn" onclick="scrollTo_('dr-dispo',this,'dr')">Disposition</button>
+</div>
+<div class="subnav" id="subnav-hy" style="display:none">
+  <button class="subnav-btn active-hy" onclick="scrollTo_('hy-grades',this,'hy')">Grading</button>
+  <button class="subnav-btn" onclick="scrollTo_('hy-rewarm',this,'hy')">Rewarming</button>
+  <button class="subnav-btn" onclick="scrollTo_('hy-ttm',this,'hy')">TTM</button>
+  <button class="subnav-btn" onclick="scrollTo_('hy-pitfalls',this,'hy')">Pitfalls</button>
+  <button class="subnav-btn" onclick="scrollTo_('hy-workup',this,'hy')">Workup</button>
+</div>
+
+<div class="content">
+
+<!-- ══════════ SEIZURES ══════════ -->
+<div class="tab-panel active" id="panel-sz">
+
+  <div id="sz-first-aid">
+    <div class="group-label"><span class="group-tag tag-sz">First Aid</span><span class="group-line"></span></div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">✅</span><span class="card-title">What TO DO During Active Seizure</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="check-list">
+          <div class="check-item"><span class="check-ico">🟢</span><div><b>Protect from injury</b> — clear hard/sharp objects, cushion the head</div></div>
+          <div class="check-item"><span class="check-ico">🟢</span><div><b>Time the seizure</b> — &gt;5 min = status epilepticus threshold → call EMS</div></div>
+          <div class="check-item"><span class="check-ico">🟢</span><div><b>Recovery position</b> (lateral decubitus) — after convulsive phase ends, or immediately if on their side already</div></div>
+          <div class="check-item"><span class="check-ico">🟢</span><div><b>Loosen</b> tight clothing around neck and chest</div></div>
+          <div class="check-item"><span class="check-ico">🟢</span><div><b>Stay with the patient</b> until fully recovered</div></div>
+        </div>
+        <div class="alert yellow">
+          <span class="alert-ico">⚡</span>
+          <div><b>Moving the patient:</b> Only if in immediate danger (road, water, stairs). Drag by armpits as a unit — minimal handling — then resume positioning.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">🚫</span><span class="card-title">What NOT TO DO</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="check-list">
+          <div class="check-item"><span class="check-ico">🔴</span><div><b>Do NOT restrain</b> movements — forced restraint causes injuries</div></div>
+          <div class="check-item"><span class="check-ico">🔴</span><div><b>Nothing in the mouth</b> — tongue swallowing is a myth; object injury is real</div></div>
+          <div class="check-item"><span class="check-ico">🔴</span><div><b>No water or food</b> during or immediately after</div></div>
+          <div class="check-item"><span class="check-ico">🔴</span><div><b>Do NOT aggressively reposition</b> unless danger is immediate</div></div>
+          <div class="check-item"><span class="check-ico">🔴</span><div><b>Do NOT leave alone</b> — monitor until full recovery</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">📞</span><span class="card-title">When to Activate EMS</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="row-list">
+          <div class="row-item"><div class="row-label">Duration</div><div class="row-val"><span class="b b-red">Call immediately</span> if &gt;5 minutes</div></div>
+          <div class="row-item"><div class="row-label">Post-ictal</div><div class="row-val"><span class="b b-red">Call</span> if no return to baseline</div></div>
+          <div class="row-item"><div class="row-label">Cluster</div><div class="row-val"><span class="b b-red">Call</span> — second seizure without recovery</div></div>
+          <div class="row-item"><div class="row-label">First-ever seizure</div><div class="row-val"><span class="b b-red">Always call</span></div></div>
+          <div class="row-item"><div class="row-label">Breathing compromised</div><div class="row-val"><span class="b b-red">Always call</span></div></div>
+          <div class="row-item"><div class="row-label">Pregnancy</div><div class="row-val"><span class="b b-red">Always call</span> — suspect eclampsia</div></div>
+          <div class="row-item"><div class="row-label">Head trauma</div><div class="row-val"><span class="b b-red">Always call</span></div></div>
+          <div class="row-item"><div class="row-label">Known epileptic, quick recovery</div><div class="row-val"><span class="b b-yellow">Monitor</span> — may not require EMS</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sz-stabilize">
+    <div class="group-label"><span class="group-tag tag-sz">ER Stabilization</span><span class="group-line"></span></div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">💉</span><span class="card-title">Immediate Actions — DON'T</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="mnem">
+          <div class="mnem-row"><span class="mnem-letter" style="color:var(--sz)">D</span><div><div class="mnem-text"><b>Dextrose</b></div><div class="mnem-sub">Bedside BGL immediately — hypoglycemia is reversible</div></div></div>
+          <div class="mnem-row"><span class="mnem-letter" style="color:var(--sz)">O</span><div><div class="mnem-text"><b>Oxygen</b></div><div class="mnem-sub">SpO₂, supplemental O₂, assess airway</div></div></div>
+          <div class="mnem-row"><span class="mnem-letter" style="color:var(--sz)">N</span><div><div class="mnem-text"><b>Naloxone</b></div><div class="mnem-sub">If opioid overdose is on the differential</div></div></div>
+          <div class="mnem-row"><span class="mnem-letter" style="color:var(--sz)">T</span><div><div class="mnem-text"><b>Thiamine 100 mg IV</b></div><div class="mnem-sub">Give <i>before</i> dextrose — alcoholics or malnourished</div></div></div>
+        </div>
+        <div class="alert yellow">
+          <span class="alert-ico">⚠️</span>
+          <div><b>Airway:</b> Actively seizing with compromised airway → RSI. Post-ictal patients can deteriorate — reassess repeatedly.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">🧠</span><span class="card-title">Underlying Cause — VITAMINS</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="mnem">
+          <div class="mnem-row"><span class="mnem-letter" style="color:var(--red)">V</span><div><div class="mnem-text"><b>Vascular</b></div><div class="mnem-sub">Stroke, ICH, CVST</div></div></div>
+          <div class="mnem-row"><span class="mnem-letter" style="color:var(--red)">I</span><div><div class="mnem-text"><b>Infection</b></div><div class="mnem-sub">Meningitis, encephalitis, abscess</div></div></div>
+          <div class="mnem-row"><span class="mnem-letter" style="color:var(--red)">T</span><div><div class="mnem-text"><b>Trauma</b></div><div class="mnem-sub">Head injury, EDH, SDH</div></div></div>
+          <div class="mnem-row"><span class="mnem-letter" style="color:var(--red)">A</span><div><div class="mnem-text"><b>Autoimmune / Alcohol</b></div><div class="mnem-sub">Autoimmune encephalitis, withdrawal</div></div></div>
+          <div class="mnem-row"><span class="mnem-letter" style="color:var(--red)">M</span><div><div class="mnem-text"><b>Metabolic</b></div><div class="mnem-sub">HypoNa, hypoglycemia, hypoCa, hypoMg, uremia</div></div></div>
+          <div class="mnem-row"><span class="mnem-letter" style="color:var(--red)">I</span><div><div class="mnem-text"><b>Idiopathic / Known epilepsy</b></div><div class="mnem-sub">Check AED compliance, subtherapeutic levels</div></div></div>
+          <div class="mnem-row"><span class="mnem-letter" style="color:var(--red)">N</span><div><div class="mnem-text"><b>Neoplasm</b></div><div class="mnem-sub">Primary or metastatic brain lesion</div></div></div>
+          <div class="mnem-row"><span class="mnem-letter" style="color:var(--red)">S</span><div><div class="mnem-text"><b>Structural / Substances</b></div><div class="mnem-sub">Cortical dysplasia, drugs, toxins</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sz-drugs">
+    <div class="group-label"><span class="group-tag tag-sz">Drug Ladder</span><span class="group-line"></span></div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">⚡</span><span class="card-title">Seizure Termination Protocol</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num sn-sz">1</div>
+            <div class="step-body">
+              <div class="step-head">Benzodiazepines — 0–5 min</div>
+              <div class="drug"><div class="drug-name">Lorazepam IV <span class="b b-green">Preferred</span></div><div class="drug-info">0.1 mg/kg IV · max 4 mg<br>Repeat once after 5 min if no response</div></div>
+              <div class="drug"><div class="drug-name">Midazolam IM / IN <span class="b b-blue">No IV access</span></div><div class="drug-info">0.2 mg/kg IM · 0.2–0.3 mg/kg intranasal</div></div>
+              <div class="drug"><div class="drug-name">Diazepam PR <span class="b b-orange">Last resort</span></div><div class="drug-info">0.5 mg/kg rectal · no IV/IM available</div></div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num sn-sz">2</div>
+            <div class="step-body">
+              <div class="step-head">Second-Line AEDs — &gt;10 min</div>
+              <div class="drug"><div class="drug-name">Levetiracetam IV <span class="b b-green">Preferred</span></div><div class="drug-info">60 mg/kg IV · max 4500 mg · over 15 min</div></div>
+              <div class="drug"><div class="drug-name">Valproate IV <span class="b b-red">Avoid pregnancy</span></div><div class="drug-info">40 mg/kg IV · max 3000 mg · over 10 min</div></div>
+              <div class="drug"><div class="drug-name">Fosphenytoin IV <span class="b b-orange">ECG monitoring</span></div><div class="drug-info">20 mg PE/kg · cardiac monitoring mandatory</div></div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num sn-sz">3</div>
+            <div class="step-body">
+              <div class="step-head">Refractory Status — &gt;30 min</div>
+              <div class="alert red" style="margin-top:6px"><span class="alert-ico">🚨</span><div><b>Intubate + ICU</b> — continuous EEG monitoring mandatory</div></div>
+              <div class="drug"><div class="drug-name">Propofol infusion</div><div class="drug-info">1–2 mg/kg bolus → 1–10 mg/kg/hr</div></div>
+              <div class="drug"><div class="drug-name">Midazolam infusion</div><div class="drug-info">0.2 mg/kg bolus → 0.05–2 mg/kg/hr</div></div>
+              <div class="drug"><div class="drug-name">Ketamine</div><div class="drug-info">1–2 mg/kg bolus · consider in refractory cases</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sz-workup">
+    <div class="group-label"><span class="group-tag tag-sz">Workup</span><span class="group-line"></span></div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">🔬</span><span class="card-title">Investigations</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="row-list">
+          <div class="row-item"><div class="row-label">BGL (bedside)</div><div class="row-val"><span class="b b-red">Always · Immediate</span></div></div>
+          <div class="row-item"><div class="row-label">BMP — Na, Ca, Mg, glucose, renal</div><div class="row-val"><span class="b b-red">Always</span></div></div>
+          <div class="row-item"><div class="row-label">CBC</div><div class="row-val"><span class="b b-red">Always</span></div></div>
+          <div class="row-item"><div class="row-label">Tox screen (urine + serum)</div><div class="row-val"><span class="b b-red">Always</span></div></div>
+          <div class="row-item"><div class="row-label">12-lead ECG</div><div class="row-val"><span class="b b-red">Always</span></div></div>
+          <div class="row-item"><div class="row-label">β-hCG</div><div class="row-val"><span class="b b-red">All women of reproductive age</span></div></div>
+          <div class="row-item"><div class="row-label">AED levels</div><div class="row-val">Known epileptic on medication</div></div>
+          <div class="row-item"><div class="row-label">CT Head</div><div class="row-val">First seizure · focal deficit · trauma · elderly · no recovery</div></div>
+          <div class="row-item"><div class="row-label">LP</div><div class="row-val">Fever + seizure — after CT if raised ICP suspected</div></div>
+          <div class="row-item"><div class="row-label">MRI Brain</div><div class="row-val">Structural lesion · encephalitis · cortical dysplasia</div></div>
+          <div class="row-item"><div class="row-label">EEG</div><div class="row-val">Status · prolonged confusion · suspect NCSE</div></div>
+        </div>
+        <div class="alert yellow">
+          <span class="alert-ico">⚠️</span>
+          <div><b>Don't miss NCSE</b> — non-convulsive status presents as subtle altered consciousness with no motor activity. Requires EEG to diagnose.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sz-dispo">
+    <div class="group-label"><span class="group-tag tag-sz">Disposition</span><span class="group-line"></span></div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">🏥</span><span class="card-title">Disposition Guide</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="row-list">
+          <div class="row-item"><div class="row-label">Known epileptic · back to baseline · clear trigger</div><div class="row-val"><span class="b b-green">Discharge</span> + neurology follow-up</div></div>
+          <div class="row-item"><div class="row-label">First seizure · normal workup</div><div class="row-val"><span class="b b-yellow">Admit / Obs</span> + neurology consult</div></div>
+          <div class="row-item"><div class="row-label">Status epilepticus</div><div class="row-val"><span class="b b-red">ICU</span></div></div>
+          <div class="row-item"><div class="row-label">Metabolic cause identified</div><div class="row-val"><span class="b b-yellow">Admit</span> — treat underlying cause</div></div>
+          <div class="row-item"><div class="row-label">Structural lesion on imaging</div><div class="row-val"><span class="b b-red">Admit</span> — neurosurgery/neurology consult</div></div>
+          <div class="row-item"><div class="row-label">Eclampsia</div><div class="row-val"><span class="b b-red">OB emergency</span> — MgSO₄ + delivery planning</div></div>
+          <div class="row-item"><div class="row-label">Meningitis / encephalitis</div><div class="row-val"><span class="b b-red">Admit</span> — empiric antibiotics immediately</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end sz panel -->
+
+<!-- ══════════ DROWNING ══════════ -->
+<div class="tab-panel" id="panel-dr">
+
+  <div id="dr-first-aid">
+    <div class="group-label"><span class="group-tag tag-dr">First Aid</span><span class="group-line"></span></div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">🛟</span><span class="card-title">Scene Safety — Reach, Throw, Don't Go</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="alert red">
+          <span class="alert-ico">🔴</span>
+          <div><b>Do NOT enter the water</b> unless you are a trained water rescuer. Panicking victims can incapacitate you — you become the second victim.</div>
+        </div>
+        <div class="check-list mt12">
+          <div class="check-item"><span class="check-ico" style="color:var(--dr)">1</span><div><b>Reach</b> — pole, rope, clothing, or branch from shore</div></div>
+          <div class="check-item"><span class="check-ico" style="color:var(--dr)">2</span><div><b>Throw</b> — flotation device, rope, anything buoyant</div></div>
+          <div class="check-item"><span class="check-ico" style="color:var(--dr)">3</span><div><b>Don't go</b> — last resort, trained rescuers only</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">📊</span><span class="card-title">On Extraction — Immediate Evaluation</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="row-list">
+          <div class="row-item"><div class="row-label">Responsiveness (AVPU)</div><div class="row-val">Drives entire management pathway</div></div>
+          <div class="row-item"><div class="row-label">Breathing</div><div class="row-val">Present/absent — if absent → <span class="b b-red">CPR immediately</span></div></div>
+          <div class="row-item"><div class="row-label">Submersion time</div><div class="row-val">&gt;1 min → evaluate; &gt;5 min → high risk</div></div>
+          <div class="row-item"><div class="row-label">C-spine</div><div class="row-val">Immobilize <b>only</b> if witnessed dive/trauma — do not delay CPR</div></div>
+          <div class="row-item"><div class="row-label">Water temperature</div><div class="row-val">Cold water = hypothermia + neuroprotection</div></div>
+          <div class="row-item"><div class="row-label">Circumstances</div><div class="row-val">Alcohol, drugs, trauma, cardiac event?</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">💓</span><span class="card-title">CPR — Ventilation First Algorithm</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="algo"><span class="a-step">RESPONSIVE + breathing?</span>
+<span class="a-dim">→</span> Lateral decubitus (recovery position)
+<span class="a-dim">→</span> Remove wet clothing, keep warm
+<span class="a-dim">→</span> Monitor · activate EMS
+
+<span class="a-step">UNRESPONSIVE or abnormal breathing?</span>
+<span class="a-dim">→</span> <span class="a-drug">5 RESCUE BREATHS FIRST</span>
+<span class="a-dim">→</span> Check pulse
+<span class="a-dim">→</span> No pulse: CPR 30:2
+<span class="a-dim">→</span> AED as soon as available</div>
+        <div class="alert blue">
+          <span class="alert-ico">💡</span>
+          <div><b>Ventilation is the priority.</b> Drowning = hypoxic arrest. Start with 5 rescue breaths <i>before</i> compressions — unlike standard cardiac arrest.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dr-abcde">
+    <div class="group-label"><span class="group-tag tag-dr">ER — ABCDE</span><span class="group-line"></span></div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">🔍</span><span class="card-title">Primary Survey</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="steps">
+          <div class="step"><div class="step-num sn-abc">A</div><div class="step-body"><div class="step-head">Airway</div><div class="step-desc">Patent? Vomit, debris, laryngospasm? GCS ≤8 or unprotected → <b>intubate early</b>. Do not wait for deterioration.</div></div></div>
+          <div class="step"><div class="step-num sn-abc">B</div><div class="step-body"><div class="step-head">Breathing</div><div class="step-desc">SpO₂, RR, work of breathing. Auscultate — crackles = pulmonary edema/aspiration. CXR immediately. Target SpO₂ &gt;94%, avoid hyperoxia.</div></div></div>
+          <div class="step"><div class="step-num sn-abc">C</div><div class="step-body"><div class="step-head">Circulation</div><div class="step-desc">Hypothermia → bradycardia, arrhythmias, hypotension. 12-lead ECG — Osborn (J) waves? IV ×2, warm fluids if hypothermic.</div></div></div>
+          <div class="step"><div class="step-num sn-abc">D</div><div class="step-body"><div class="step-head">Disability</div><div class="step-desc">GCS, pupils, blood glucose.</div></div></div>
+          <div class="step"><div class="step-num sn-abc">E</div><div class="step-body"><div class="step-head">Exposure</div><div class="step-desc"><b>Core temperature</b> — rectal or esophageal. Full skin exam for trauma. Remove all wet clothing immediately.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dr-pulm">
+    <div class="group-label"><span class="group-tag tag-dr">Pulmonary</span><span class="group-line"></span></div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">🫁</span><span class="card-title">Pulmonary Management</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="check-list">
+          <div class="check-item"><span class="check-ico">→</span><div><b>ARDS protocol</b> if intubated — 6 ml/kg IBW, PEEP titration</div></div>
+          <div class="check-item"><span class="check-ico">→</span><div><b>CPAP / HFNC</b> bridge for moderate hypoxia before intubation</div></div>
+          <div class="check-item"><span class="check-ico">→</span><div><b>Surfactant washout</b> is the core insult — treat as ARDS</div></div>
+          <div class="check-item"><span class="check-ico">→</span><div><b>Antibiotics NOT routine</b> — only for contaminated water or infection signs</div></div>
+          <div class="check-item"><span class="check-ico">→</span><div><b>Serial CXR</b> at 4–6 hr — pulmonary edema can evolve after normal initial film</div></div>
+        </div>
+        <div class="alert blue">
+          <span class="alert-ico">⚠️</span>
+          <div><b>Secondary drowning is real.</b> Delayed pulmonary edema can be fatal. Never discharge without ≥6–8 hours observation, even Grade 1.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dr-workup">
+    <div class="group-label"><span class="group-tag tag-dr">Workup</span><span class="group-line"></span></div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">🔬</span><span class="card-title">Investigations</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="row-list">
+          <div class="row-item"><div class="row-label">ABG</div><div class="row-val"><span class="b b-red">Mandatory</span> — oxygenation + acid-base</div></div>
+          <div class="row-item"><div class="row-label">Core temperature</div><div class="row-val"><span class="b b-red">Mandatory</span> — rectal or esophageal</div></div>
+          <div class="row-item"><div class="row-label">BMP · lactate · CBC · coagulation</div><div class="row-val"><span class="b b-red">Always</span></div></div>
+          <div class="row-item"><div class="row-label">CXR (serial)</div><div class="row-val"><span class="b b-red">Always</span> — repeat at 4–6 hours</div></div>
+          <div class="row-item"><div class="row-label">12-lead ECG</div><div class="row-val">Arrhythmias · Osborn waves</div></div>
+          <div class="row-item"><div class="row-label">Troponin</div><div class="row-val">Prolonged hypoxia or arrhythmia</div></div>
+          <div class="row-item"><div class="row-label">Toxicology</div><div class="row-val">Unclear circumstances — alcohol, drugs</div></div>
+          <div class="row-item"><div class="row-label">CT head / c-spine</div><div class="row-val">Trauma mechanism or witnessed dive</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dr-dispo">
+    <div class="group-label"><span class="group-tag tag-dr">Disposition</span><span class="group-line"></span></div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">🏥</span><span class="card-title">Szpilman Classification</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="row-list">
+          <div class="row-item"><div class="row-label"><span class="b b-green">Grade 1</span> — Cough only, normal lungs</div><div class="row-val">Observe ≥6–8h; discharge if stable</div></div>
+          <div class="row-item"><div class="row-label"><span class="b b-yellow">Grade 2</span> — Crackles at bases, SpO₂ ok</div><div class="row-val">Admit, monitor</div></div>
+          <div class="row-item"><div class="row-label"><span class="b b-orange">Grade 3</span> — Pulmonary edema, low SpO₂, normotensive</div><div class="row-val"><span class="b b-red">ICU</span></div></div>
+          <div class="row-item"><div class="row-label"><span class="b b-orange">Grade 4</span> — Pulmonary edema + hypotension</div><div class="row-val"><span class="b b-red">ICU</span></div></div>
+          <div class="row-item"><div class="row-label"><span class="b b-red">Grade 5</span> — Respiratory arrest</div><div class="row-val"><span class="b b-red">ICU · intubate</span></div></div>
+          <div class="row-item"><div class="row-label"><span class="b b-red">Grade 6</span> — Cardiorespiratory arrest</div><div class="row-val"><span class="b b-red">ICU · ECMO consideration</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">💡</span><span class="card-title">Key Clinical Pearls</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="check-list">
+          <div class="check-item"><span class="check-ico">◆</span><div><b>"Not dead until warm and dead"</b> — continue resuscitation after cold-water submersion until core temp ≥32–35°C</div></div>
+          <div class="check-item"><span class="check-ico">◆</span><div><b>Cold water is neuroprotective</b> — good neuro outcomes still possible after extended submersion</div></div>
+          <div class="check-item"><span class="check-ico">◆</span><div><b>C-spine only if indicated</b> — witnessed dive/trauma only. Routine immobilization delays CPR</div></div>
+          <div class="check-item"><span class="check-ico">◆</span><div><b>Salt vs fresh water</b> — minimal acute difference; both cause surfactant washout and ARDS pattern</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end dr panel -->
+
+<!-- ══════════ HYPOTHERMIA ══════════ -->
+<div class="tab-panel" id="panel-hy">
+
+  <div id="hy-grades">
+    <div class="group-label"><span class="group-tag tag-hy">Swiss Grading</span><span class="group-line"></span></div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">🌡️</span><span class="card-title">Hypothermia Grades — Swiss System</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="grade-list">
+          <div class="grade-item" style="border-color:rgba(244,165,53,0.35)">
+            <span class="grade-tag" style="color:var(--sz)">HT I</span>
+            <span class="grade-temp">32–35°C</span>
+            <span class="grade-desc"><b>Mild</b> — Conscious, shivering present</span>
+          </div>
+          <div class="grade-item" style="border-color:rgba(255,149,72,0.35)">
+            <span class="grade-tag" style="color:var(--orange)">HT II</span>
+            <span class="grade-temp">28–32°C</span>
+            <span class="grade-desc"><b>Moderate</b> — Impaired consciousness, shivering stops</span>
+          </div>
+          <div class="grade-item" style="border-color:rgba(255,107,107,0.35)">
+            <span class="grade-tag" style="color:var(--red)">HT III</span>
+            <span class="grade-temp">24–28°C</span>
+            <span class="grade-desc"><b>Severe</b> — Unconscious, vital signs present</span>
+          </div>
+          <div class="grade-item" style="border-color:rgba(255,107,107,0.5); background:rgba(255,107,107,0.06)">
+            <span class="grade-tag" style="color:var(--red)">HT IV</span>
+            <span class="grade-temp">&lt;24°C</span>
+            <span class="grade-desc"><b>Arrest</b> — No vital signs</span>
+          </div>
+          <div class="grade-item">
+            <span class="grade-tag" style="color:var(--text3)">HT V</span>
+            <span class="grade-temp">Irreversible</span>
+            <span class="grade-desc" style="color:var(--text3)"><b>Death</b> from hypothermia confirmed</span>
+          </div>
+        </div>
+        <div class="alert purple mt12">
+          <span class="alert-ico">💡</span>
+          <div><b>Key sign:</b> Shivering stops at ~30–32°C. A quiet, non-shivering patient is not reassuring — they may have crossed into moderate territory.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="hy-rewarm">
+    <div class="group-label"><span class="group-tag tag-hy">Rewarming</span><span class="group-line"></span></div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">🎯</span><span class="card-title">Target Temperature & Rate</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-label">Target Temp</div>
+            <div class="stat-val" style="color:var(--hy)">36–37.5°C</div>
+            <div class="stat-sub">Normothermia — avoid overshooting</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Rewarm Rate</div>
+            <div class="stat-val" style="color:var(--dr)">~1°C/hr</div>
+            <div class="stat-sub">Moderate–severe hypothermia</div>
+          </div>
+        </div>
+        <div class="alert red mt12">
+          <span class="alert-ico">⚠️</span>
+          <div>Too fast → <b>rewarming shock</b> (peripheral vasodilation → distributive shock) and <b>afterdrop</b>. Always warm trunk first, not extremities.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">♨️</span><span class="card-title">Strategy by Grade</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="row-list">
+          <div class="row-item"><div class="row-label"><span class="b b-yellow">HT I · 32–35°C</span></div><div class="row-val"><b>Passive</b> — blankets, warm environment, remove wet clothing</div></div>
+          <div class="row-item"><div class="row-label"><span class="b b-orange">HT II · 28–32°C</span></div><div class="row-val"><b>Active external</b> — warming blankets to trunk, warm humidified O₂, warm IV fluids 38–42°C</div></div>
+          <div class="row-item"><div class="row-label"><span class="b b-red">HT III · 24–28°C</span></div><div class="row-val"><b>Active internal</b> — warm IV fluids, warm O₂, body cavity lavage (gastric, bladder, pleural, peritoneal)</div></div>
+          <div class="row-item"><div class="row-label"><span class="b b-red">HT IV · &lt;24°C</span></div><div class="row-val"><b>ECMO / ECPR</b> — extracorporeal rewarming; most effective in cardiac arrest</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="hy-ttm">
+    <div class="group-label"><span class="group-tag tag-hy">Post-Arrest TTM</span><span class="group-line"></span></div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">🧊</span><span class="card-title">Targeted Temperature Management</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="row-list">
+          <div class="row-item"><div class="row-label">Post-ROSC · comatose</div><div class="row-val"><span class="b b-purple">32–36°C</span> for 24 hr → controlled rewarming</div></div>
+          <div class="row-item"><div class="row-label">Active hypothermic arrest</div><div class="row-val">Rewarm to normothermia first → reassess neuro when warm</div></div>
+          <div class="row-item"><div class="row-label">Avoid post-ROSC</div><div class="row-val"><span class="b b-red">&gt;37.5°C</span> — hyperthermia is clearly harmful</div></div>
+        </div>
+        <div class="alert purple mt12">
+          <span class="alert-ico">📖</span>
+          <div><b>TTM2 Trial (2021):</b> Shifted to <b>36°C</b> rather than 33°C for most post-arrest patients. Key goal = <b>prevent hyperthermia</b>, not chase a cold target.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="hy-pitfalls">
+    <div class="group-label"><span class="group-tag tag-red">Clinical Pitfalls</span><span class="group-line"></span></div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">⚠️</span><span class="card-title">Critical Traps</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="row-list">
+          <div class="row-item"><div class="row-label">Afterdrop</div><div class="row-val">Core temp continues falling after rewarming starts — cold peripheral blood floods core. Don't panic; keep rewarming.</div></div>
+          <div class="row-item"><div class="row-label">Rewarming arrhythmias</div><div class="row-val">VF risk highest during rewarming in HT III–IV. Gentle handling, minimal stimulation, continuous ECG monitoring.</div></div>
+          <div class="row-item"><div class="row-label">K⁺ &gt;12 mEq/L</div><div class="row-val"><span class="b b-red">Futility marker</span> — irreversible cell death. Consider stopping CPR/ECMO in hypothermic arrest.</div></div>
+          <div class="row-item"><div class="row-label">Declaring death too early</div><div class="row-val">"Not dead until warm and dead" — do not declare until core temp ≥32–35°C has been achieved.</div></div>
+          <div class="row-item"><div class="row-label">Osborn (J) waves</div><div class="row-val">Pathognomonic but not always present. Don't exclude hypothermia by ECG alone.</div></div>
+          <div class="row-item"><div class="row-label">Rewarming shock</div><div class="row-val">Aggressive peripheral warming → vasodilation → distributive shock. Always warm trunk first.</div></div>
+          <div class="row-item"><div class="row-label">Impaired drug metabolism</div><div class="row-val">Hypothermia slows clearance — avoid stacking drugs. Many won't work until the patient is rewarmed.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="hy-workup">
+    <div class="group-label"><span class="group-tag tag-hy">Workup</span><span class="group-line"></span></div>
+
+    <div class="card open">
+      <div class="card-hd" onclick="tog(this)">
+        <span class="card-icon">🔬</span><span class="card-title">Investigations</span><span class="card-arrow">▶</span>
+      </div>
+      <div class="card-bd">
+        <div class="row-list">
+          <div class="row-item"><div class="row-label">Core temp (rectal/esophageal)</div><div class="row-val"><span class="b b-red">Mandatory</span> — oral/axillary unreliable below 35°C</div></div>
+          <div class="row-item"><div class="row-label">12-lead ECG</div><div class="row-val">Osborn waves · arrhythmias · bradycardia · prolonged intervals</div></div>
+          <div class="row-item"><div class="row-label">ABG</div><div class="row-val">Acid-base — temperature-correct the values</div></div>
+          <div class="row-item"><div class="row-label">Serum K⁺</div><div class="row-val">&gt;12 mEq/L = <span class="b b-red">futility marker</span> in arrest</div></div>
+          <div class="row-item"><div class="row-label">BMP · glucose · lactate</div><div class="row-val">Metabolic status</div></div>
+          <div class="row-item"><div class="row-label">CBC · coagulation</div><div class="row-val">Coagulopathy common in severe hypothermia</div></div>
+          <div class="row-item"><div class="row-label">Toxicology</div><div class="row-val">Alcohol/drug intoxication as contributing cause</div></div>
+          <div class="row-item"><div class="row-label">Troponin</div><div class="row-val">Cardiac injury if prolonged arrest or arrhythmia</div></div>
+        </div>
+        <div class="alert red mt12">
+          <span class="alert-ico">🌡️</span>
+          <div><b>Thermometer trap:</b> Standard oral/axillary thermometers don't read below 35°C. Always use a <b>low-reading rectal or esophageal probe</b> in any suspected hypothermia.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end hy panel -->
+
+</div><!-- end content -->
+
+<!-- BOTTOM TABS -->
+<nav class="bottom-tabs">
+  <button class="bot-tab act-sz" id="bot-sz" onclick="switchTab('sz',this)">
+    <span class="t-emoji">⚡</span><span class="t-label">Seizures</span>
+  </button>
+  <button class="bot-tab" id="bot-dr" onclick="switchTab('dr',this)">
+    <span class="t-emoji">🌊</span><span class="t-label">Drowning</span>
+  </button>
+  <button class="bot-tab" id="bot-hy" onclick="switchTab('hy',this)">
+    <span class="t-emoji">❄️</span><span class="t-label">Hypothermia</span>
+  </button>
+</nav>
+
+<script>
+const tabs = ['sz','dr','hy'];
+const aClass = {sz:'act-sz', dr:'act-dr', hy:'act-hy'};
+
+function switchTab(tab, btn) {
+  tabs.forEach(t => {
+    document.getElementById('panel-'+t).classList.remove('active');
+    document.getElementById('subnav-'+t).style.display = 'none';
+    document.getElementById('bot-'+t).classList.remove('act-sz','act-dr','act-hy');
+  });
+  document.getElementById('panel-'+tab).classList.add('active');
+  document.getElementById('subnav-'+tab).style.display = 'flex';
+  btn.classList.add(aClass[tab]);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function tog(hd) { hd.parentElement.classList.toggle('open'); }
+
+function scrollTo_(id, btn, tab) {
+  document.getElementById('subnav-'+tab)
+    .querySelectorAll('.subnav-btn')
+    .forEach(b => b.classList.remove('active-sz','active-dr','active-hy'));
+  btn.classList.add('active-'+tab);
+  const el = document.getElementById(id);
+  if (el) {
+    const top = el.getBoundingClientRect().top + window.pageYOffset - 108;
+    window.scrollTo({top, behavior:'smooth'});
+  }
+}
+
+// init
+document.getElementById('subnav-dr').style.display = 'none';
+document.getElementById('subnav-hy').style.display = 'none';
+</script>
+</body>
+</html>
